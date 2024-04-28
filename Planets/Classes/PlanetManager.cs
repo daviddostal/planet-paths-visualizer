@@ -15,10 +15,7 @@ namespace Planets
         private float time;
         public float Time
         {
-            get
-            {
-                return time;
-            }
+            get => time;
             set
             {
                 time = value;
@@ -29,10 +26,7 @@ namespace Planets
         private float step;
         public float Step
         {
-            get
-            {
-                return step;
-            }
+            get => step;
             set
             {
                 step = value;
@@ -43,10 +37,7 @@ namespace Planets
         private Planet viewFrom;
         public Planet ViewFrom
         {
-            get
-            {
-                return viewFrom;
-            }
+            get => viewFrom;
             set
             {
                 viewFrom = value;
@@ -59,10 +50,7 @@ namespace Planets
         private float zoom;
         public float Zoom
         {
-            get
-            {
-                return zoom;
-            }
+            get => zoom;
             set
             {
                 zoom = value;
@@ -73,10 +61,7 @@ namespace Planets
         private int drawNthPoint;
         public int DrawNthPoint
         {
-            get
-            {
-                return drawNthPoint;
-            }
+            get => drawNthPoint;
             set
             {
                 drawNthPoint = value;
@@ -103,24 +88,18 @@ namespace Planets
         public Image DrawPlanets(Image img)
         {
             Debug.WriteLine("{1} {0} DrawPlanets started.", DateTime.Now, Thread.CurrentThread.ManagedThreadId);
+
             using (Graphics g = Graphics.FromImage(img))
             {
-                float pictureSize = g.VisibleClipBounds.Width;
-                if (g.VisibleClipBounds.Height < pictureSize)
-                {
-                    pictureSize = g.VisibleClipBounds.Height;
-                }
-
-                g.Clear(Color.Transparent);
-
-                g.TranslateTransform(g.VisibleClipBounds.Width / 2, g.VisibleClipBounds.Height / 2);
+                float pictureSize = (g.VisibleClipBounds.Height >= pictureSize)
+                        ? g.VisibleClipBounds.Width
+                        : pictureSize = g.VisibleClipBounds.Height;
 
                 float maxDistance = GetMaxPlanetsDistance();
-                float scale = Zoom;
-                if (maxDistance != 0)
-                {
-                    scale = Zoom * pictureSize / (maxDistance * 4);
-                }
+                float scale = (maxDistance == 0) ? Zoom : Zoom * pictureSize / (maxDistance * 4);
+
+                g.Clear(Color.Transparent);
+                g.TranslateTransform(g.VisibleClipBounds.Width / 2, g.VisibleClipBounds.Height / 2);
                 g.ScaleTransform(scale, scale);
 
                 for(int i = 0; i < Planets.Count; i++)
@@ -130,9 +109,11 @@ namespace Planets
                     Debug.WriteLine("{1} {0} Drawing planet {2}.", DateTime.Now, Thread.CurrentThread.ManagedThreadId, p);
                     p.DrawPlanet(g, Time, Step, ViewFrom, scale, DrawNthPoint);
                 }
+
                 OnProgressChanged(Planets.Count);
+                Debug.WriteLine("{1} {0} DrawPlanets finished.", DateTime.Now, Thread.CurrentThread.ManagedThreadId);
             }
-            Debug.WriteLine("{1} {0} DrawPlanets finished.", DateTime.Now, Thread.CurrentThread.ManagedThreadId);
+            
             return img;
         }
 
@@ -233,15 +214,10 @@ namespace Planets
         private class PlanetData
         {
             public float Time { get; set; }
-
             public float Step { get; set; }
-
             public Planet ViewFrom { get; set; }
-
             public float Zoom { get; set; }
-
             public int DrawNthPoint { get; set; }
-
             public BindingList<DrawablePlanet> Planets { get; set; }
         }
     }

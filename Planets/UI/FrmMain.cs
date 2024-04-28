@@ -36,7 +36,6 @@ namespace Planets
             sfdSave.InitialDirectory = Path.Combine(Directory.GetCurrentDirectory(), "saves");
             sfdExport.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-
             manager.PlanetAdded += PlanetAdded;
             manager.PlanetsCleared += PlanetsCleared;
             manager.PropertyChanged += Manager_PropertyChanged;
@@ -63,11 +62,7 @@ namespace Planets
             }
         }
 
-        public FrmMain()
-            : this(null)
-        {
-
-        }
+        public FrmMain() : this(null) { }
 
         private void Manager_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -96,10 +91,12 @@ namespace Planets
             control.PlanetRemoved += RemovePlanet;
             PlanetRemoved += control.RemoveUpdate;
             control.Dock = DockStyle.Top;
+
             pnlPlanets.SuspendLayout();
             pnlPlanets.Controls.Add(control);
             control.BringToFront();
             pnlPlanets.ResumeLayout();
+            
             pnlPlanetsContainer.VerticalScroll.Value = pnlPlanetsContainer.VerticalScroll.Maximum;
         }
 

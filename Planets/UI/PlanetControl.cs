@@ -47,13 +47,10 @@ namespace Planets
 
         void planet_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Parent")
+            if (e.PropertyName == "Parent" && planet.Parent != null)
             {
-                if (planet.Parent != null)
-                {
-                    planet.Parent.PropertyChanged -= Parent_PropertyChanged;
-                    planet.Parent.PropertyChanged += Parent_PropertyChanged;
-                }
+                planet.Parent.PropertyChanged -= Parent_PropertyChanged;
+                planet.Parent.PropertyChanged += Parent_PropertyChanged;
             }
         }
 
@@ -97,7 +94,7 @@ namespace Planets
 
         private void cbxParent_SelectedValueChanged(object sender, EventArgs e)
         {
-                planet.Parent = cbxParent.SelectedItem as Planet;
+            planet.Parent = cbxParent.SelectedItem as Planet;
         }
 
         private void cbxParent_Enter(object sender, EventArgs e)

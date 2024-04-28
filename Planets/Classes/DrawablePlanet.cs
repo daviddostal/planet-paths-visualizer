@@ -9,10 +9,7 @@ namespace Planets
         private string name;
         public string Name
         {
-            get
-            {
-                return name;
-            }
+            get => name;
             set
             {
                 name = value;
@@ -23,10 +20,7 @@ namespace Planets
         private bool visible;
         public bool Visible
         {
-            get
-            {
-                return visible;
-            }
+            get => visible;
             set
             {
                 visible = value;
@@ -37,10 +31,7 @@ namespace Planets
         private Color color;
         public Color Color
         {
-            get
-            {
-                return color;
-            }
+            get => color;
             set
             {
                 color = value;
@@ -85,11 +76,11 @@ namespace Planets
         public PointF[] GetPath(float time, float stepLength, Planet viewFrom)
         {
             PointF[] path = new PointF[(int)Math.Ceiling(time / stepLength)];
-            float f = 0;
+            float time = 0;
             for (int i = 0; i < path.Length; i++)
             {
-                path[i] = GetRelativePosition(f, viewFrom);
-                f += stepLength;
+                path[i] = GetRelativePosition(time, viewFrom);
+                time += stepLength;
             }
             return path;
         }
@@ -98,25 +89,29 @@ namespace Planets
         {
             if (path.Length > 1)
             {
-                using (Pen pen = new Pen(Color, pathSize / scale)) // Optimise?
+                // TODO: optimise by reusing pens with same color
+                using (Pen pen = new Pen(Color, pathSize / scale))
                 {
-                    //g.DrawCurve(pen, path);
-                    g.DrawLines(pen, path); // much better performance and can still be accurate with enough points
+                    // Although DrawLines() can only draw straight lines between points, it has
+                    // much better performance than DrawCurve() and can still be accurate
+                    // if the points are dense enough.
+                    g.DrawLines(pen, path);
                 }
             }
         }
 
         private void DrawPosition(PointF pos, Graphics g, float scale)
         {
-            using (Brush b = new SolidBrush(Color)) // Optimise?
+            float diameter = positionSize / scale;
+            float radius = diameter / 2;
+            
+            // TODO: optimise by reusing brushes with same color
+            using (Brush b = new SolidBrush(Color))
             {
-                g.FillEllipse(b, pos.X - (positionSize/scale) / 2, pos.Y - (positionSize/scale) / 2, positionSize/scale, positionSize/scale);
+                g.FillEllipse(b, pos.X - radius, pos.Y - radius, diameter, diameter);
             }
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() =>  Name;
     }
 }

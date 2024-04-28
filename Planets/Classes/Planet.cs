@@ -14,10 +14,7 @@ namespace Planets
         private float distance;
         public float Distance
         {
-            get
-            {
-                return distance;
-            }
+            get => distance;
             set
             {
                 distance = value;
@@ -28,10 +25,7 @@ namespace Planets
         private float orbitTime;
         public float OrbitTime
         {
-            get
-            {
-                return orbitTime;
-            }
+            get => orbitTime;
             set
             {
                 orbitTime = value;
@@ -42,10 +36,7 @@ namespace Planets
         private float offset;
         public float Offset
         {
-            get
-            {
-                return offset;
-            }
+            get => offset;
             set
             {
                 offset = value;
@@ -56,15 +47,12 @@ namespace Planets
         private Planet parent;
         public Planet Parent
         {
-            get
-            {
-                return parent;
-            }
+            get => parent;
             set
             {
-
                 if (!CanBeParent(value))
                     throw new ArgumentException("You have assigned a child of this planet as its parent.");
+
                 parent = value;
                 OnPropertyChanged("Parent");
             }
@@ -84,41 +72,42 @@ namespace Planets
         {
             if (parent == null)
                 return new PointF(0, 0);
-            PointF parentPosition;
-            parentPosition = Parent.GetPosition(time);
+
+            PointF parentPosition = Parent.GetPosition(time);
             float angle = (float)(Math.PI / 180) * (360 / OrbitTime * (time + offset));
-            PointF position = new PointF
-                (parentPosition.X + Distance * (float)Math.Cos(angle),
-                 parentPosition.Y + Distance * (float)Math.Sin(angle));
-            return position;
+
+            return new PointF(
+                parentPosition.X + Distance * (float)Math.Cos(angle),
+                parentPosition.Y + Distance * (float)Math.Sin(angle)
+            );
         }
 
         public PointF GetRelativePosition(float time, Planet viewFrom)
         {
             PointF viewFromPosition = viewFrom.GetPosition(time);
             PointF thisPosition = GetPosition(time);
-            PointF relativePosition = new PointF
-                (viewFromPosition.X - thisPosition.X,
-                 viewFromPosition.Y - thisPosition.Y);
-            return relativePosition;
+
+            return new PointF(
+                viewFromPosition.X - thisPosition.X,
+                viewFromPosition.Y - thisPosition.Y
+            );
         }
 
         public bool CanBeParent(Planet newParent)
         {
             if (newParent == null)
                 return true;
+
             if (newParent == this)
                 return false;
+
             return CanBeParent(newParent.Parent);
         }
 
         public float GetMaxDistance()
         {
-            float parentDistance = 0;
-            if (Parent != null)
-                parentDistance = Parent.GetMaxDistance();
-            float distance = parentDistance + Math.Abs(this.Distance);
-            return distance;
+            float parentDistance = Parent == null ? 0 : Parent.GetMaxDistance();
+            return parentDistance + Math.Abs(this.Distance);
         }
 
         [field:NonSerialized]
@@ -126,7 +115,8 @@ namespace Planets
 
         protected void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
