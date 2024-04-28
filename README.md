@@ -22,3 +22,6 @@ I developed this app in highschool, inspired by a physics/astronomics class.
 - C#
 - Winforms
 
+## Download
+*You should't run random [exe files](https://www.reddit.com/r/github/comments/1at9br4/i_am_new_to_github_and_i_have_lots_to_say/) from unknown people on the internet!*
+But if you want to download this app nonetheless, you can get the executable from the [***Releases***](https://github.com/daviddostal/planet-paths-visualizer/releases) section of this repository.
